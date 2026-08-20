@@ -1,5 +1,5 @@
 /**
- * js/crypto.js — Arcanum
+ * js/crypto.js: Arcanum
  *
  * NOTA IMPORTANTE SULLA TRASPARENZA:
  * Questa NON è la libreria ufficiale libsignal (Signal Protocol audited).
@@ -28,7 +28,7 @@ export async function initCrypto() {
   ready = true;
 }
 
-// ── Identity keypair (X25519) — generato una volta, persistito in IndexedDB ──
+// ── Identity keypair (X25519), generato una volta, persistito in IndexedDB ──
 export function generateIdentityKeyPair() {
   const kp = sodium.crypto_kx_keypair();
   return {
@@ -41,7 +41,7 @@ export function pubKeyFromSecret(secretKeyB64) {
   const sk = sodium.from_base64(secretKeyB64);
   // deriviamo la pubkey ricreando il keypair da seed non è diretto con crypto_kx;
   // per semplicità la pubkey viene sempre salvata insieme alla secret key al momento
-  // della generazione (vedi generateIdentityKeyPair) — questa funzione resta come utility.
+  // della generazione (vedi generateIdentityKeyPair), questa funzione resta come utility.
   return sodium.to_base64(sodium.crypto_scalarmult_base(sk));
 }
 
@@ -58,13 +58,13 @@ export function deriveRootKey(mySecretKeyB64, theirPublicKeyB64) {
 
 // ── Stato ratchet iniziale per una conversazione ──────────────────────────────
 // FIX CRITICO: prima versione derivava sendChainKey/recvChainKey identici per
-// entrambi i lati (stessa root key, stesse label 'send-chain'/'recv-chain') —
+// entrambi i lati (stessa root key, stesse label 'send-chain'/'recv-chain'),
 // nessuna distinzione direzionale, quindi Alice e Bob non potevano MAI
 // scambiarsi un messaggio reale (Alice cifra col suo sendChainKey, Bob prova
-// a decifrare col suo recvChainKey — valore diverso, decrypt sempre fallito).
+// a decifrare col suo recvChainKey, valore diverso, decrypt sempre fallito).
 //
 // Fix: i ruoli A/B sono assegnati confrontando le chiavi pubbliche in ordine
-// lessicografico — è deterministico, entrambi i lati calcolano lo stesso
+// lessicografico, è deterministico, entrambi i lati calcolano lo stesso
 // risultato senza bisogno di negoziazione. Chi ha la pubkey "minore" usa il
 // canale A2B per inviare e B2A per ricevere; l'altro viceversa. Così il
 // sendChainKey di uno coincide sempre col recvChainKey dell'altro.
@@ -82,7 +82,7 @@ export function initRatchetState(rootKeyBytes, myPublicKeyB64, theirPublicKeyB64
 }
 
 // Deriva la prossima chiave di messaggio dalla chain key, poi avanza la chain
-// (KDF a due output: messageKey + nextChainKey — pattern standard del ratchet simmetrico)
+// (KDF a due output: messageKey + nextChainKey, pattern standard del ratchet simmetrico)
 function ratchetChain(chainKeyB64) {
   const chainKey = sodium.from_base64(chainKeyB64);
   const messageKey   = sodium.crypto_generichash(32, chainKey, 'msg-key');
@@ -121,10 +121,10 @@ export { sodium };
 // Serve a verificare FUORI BANDA (di persona, per telefono) che lo scambio
 // di chiavi pubbliche non sia stato manomesso da un attaccante nel mezzo.
 // Se il numero calcolato da entrambi i lati coincide, le chiavi scambiate
-// sono sicuramente quelle giuste — nessun terzo si è inserito nello scambio.
+// sono sicuramente quelle giuste, nessun terzo si è inserito nello scambio.
 //
 // Ordinamento deterministico delle due pubkey (stessa tecnica già usata per
-// assegnare i canali send/recv in initRatchetState) — così Alice e Bob
+// assegnare i canali send/recv in initRatchetState), così Alice e Bob
 // calcolano lo stesso identico numero senza doversi coordinare su chi è
 // "primo" e chi è "secondo".
 export function computeSafetyNumber(myPublicKeyB64, theirPublicKeyB64) {

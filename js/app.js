@@ -1,5 +1,5 @@
 /**
- * js/app.js — Arcanum PWA
+ * js/app.js: Arcanum PWA
  * Orchestratore: identity, contatti, chat, WebRTC, ratchet crypto.
  */
 
@@ -55,7 +55,7 @@ async function boot() {
 
 // ── Data / status handlers ──────────────────────────────────────────────────────
 async function handleData(deviceId, dataStr) {
-  // Serializza tutte le operazioni sul ratchet state di questo contatto —
+  // Serializza tutte le operazioni sul ratchet state di questo contatto,
   // vedi js/mutex.js per il perché (race condition su chunk/messaggi ravvicinati)
   return withContactLock(deviceId, () => handleDataLocked(deviceId, dataStr));
 }
@@ -101,7 +101,7 @@ async function handleDataLocked(deviceId, dataStr) {
 }
 
 // Mappa gli status grezzi del transport (sempre in inglese, valori interni)
-// alle chiavi i18n corrispondenti — FIX: prima si usava il testo grezzo
+// alle chiavi i18n corrispondenti, FIX: prima si usava il testo grezzo
 // direttamente, bypassando la traduzione anche in modalità italiano.
 const STATUS_KEY = {
   connected: 'statusConnected',
@@ -138,7 +138,7 @@ async function sendMessageLocked(contact, text) {
 }
 
 // ── Invio media (foto/audio) ──────────────────────────────────────────────────────
-// NOTA: il lock resta acquisito per l'intera durata del trasferimento —
+// NOTA: il lock resta acquisito per l'intera durata del trasferimento,
 // un messaggio in arrivo dallo stesso contatto durante un invio media
 // attende che il trasferimento finisca. Compromesso corretto per la
 // correttezza crittografica (send e recv chain condividono lo stesso
@@ -183,7 +183,7 @@ async function pairWithScannedData(dataStr) {
 
   const rootKey = deriveRootKey(identity.secretKey, data.pk);
   // FIX: passiamo entrambe le pubkey per assegnare correttamente i canali
-  // send/recv — vedi crypto.js per il perché
+  // send/recv, vedi crypto.js per il perché
   const state = initRatchetState(rootKey, identity.publicKey, data.pk);
 
   // Guard: garantisce un nome non vuoto anche con QR malformato/ostile
@@ -202,7 +202,7 @@ async function pairWithScannedData(dataStr) {
 // ── UI Rendering ───────────────────────────────────────────────────────────────
 async function render() {
   // Piccola transizione fade+slide ad ogni cambio schermata (swipe, bottoni,
-  // back) — reflow forzato per poter ri-triggerare la CSS animation ad ogni
+  // back), reflow forzato per poter ri-triggerare la CSS animation ad ogni
   // chiamata, anche se si passa più volte sulla stessa schermata.
   root.classList.remove('screen-enter');
   void root.offsetWidth;
@@ -215,7 +215,7 @@ async function render() {
 
 async function renderHome() {
   const contacts = await loadContacts();
-  // Prende l'ultimo messaggio per ogni contatto — usato per l'anteprima
+  // Prende l'ultimo messaggio per ogni contatto, usato per l'anteprima
   // nella lista, al posto dello stato di connessione una volta che esiste
   // già una cronologia (più utile, stesso pattern di WhatsApp/Telegram)
   const lastMsgs = await Promise.all(contacts.map((c) => getLastMessage(c.id)));
@@ -248,7 +248,7 @@ async function renderHome() {
         const preview = previewText(lastMsgs[i]);
         // Se esiste già una cronologia mostriamo l'anteprima (statica);
         // altrimenti lo stato di connessione live (data-status, aggiornato
-        // in tempo reale da handleStatus — le due cose non convivono mai
+        // in tempo reale da handleStatus, le due cose non convivono mai
         // nello stesso elemento, altrimenti un cambio di stato live
         // cancellerebbe l'anteprima del messaggio)
         const secondaryLine = preview
@@ -271,8 +271,12 @@ async function renderHome() {
     </div>
   `;
 
-  $('#lang-it').onclick = () => { setLang('it'); render(); };
-  $('#lang-en').onclick = () => { setLang('en'); render(); };
+  // AUDIT: prima chiamava render() generica, che ri-anima TUTTO #app col
+  // fade+slide anche se restiamo sulla stessa schermata, sembrava che la
+  // pagina si ricaricasse. Il cambio lingua non è una navigazione, quindi
+  // chiama direttamente renderHome() per aggiornare solo il testo.
+  $('#lang-it').onclick = () => { setLang('it'); renderHome(); };
+  $('#lang-en').onclick = () => { setLang('en'); renderHome(); };
   $('#qr-btn').onclick = () => {
     const panel = $('#qr-panel');
     panel.classList.toggle('hidden');
@@ -280,7 +284,7 @@ async function renderHome() {
       panel.innerHTML = '';
       panel.appendChild(renderQR(myQrPayload(), 200));
 
-      // Bottone "Copia codice" — stesso contesto della condivisione QR,
+      // Bottone "Copia codice", stesso contesto della condivisione QR,
       // per pairing a distanza (chat, email) invece che di persona
       const copyBtn = document.createElement('button');
       copyBtn.className = 'copy-code-btn';
@@ -314,11 +318,11 @@ let mediaRecorder = null;
 let recordedChunks = [];
 
 async function renderChat() {
-  stopTitleEffect(); // usciamo da Home — nessun canvas #app-name-el da animare qui
+  stopTitleEffect(); // usciamo da Home, nessun canvas #app-name-el da animare qui
   if (!currentContact) { screen = 'home'; return render(); }
   const msgs = await loadMessages(currentContact.id);
 
-  // Raggruppa messaggi consecutivi dello stesso mittente — determina la
+  // Raggruppa messaggi consecutivi dello stesso mittente, determina la
   // posizione nel gruppo per applicare bordi e spaziatura coerenti
   // (stesso pattern collaudato nel mockup JSX originale dell'app).
   const groupedMsgs = msgs.map((m, i) => {
@@ -367,7 +371,7 @@ async function renderChat() {
 
   $('#back-btn').onclick = () => { screen = 'home'; currentContact = null; render(); };
 
-  // Numero di sicurezza — tap sull'header apre/chiude il pannello di verifica
+  // Numero di sicurezza, tap sull'header apre/chiude il pannello di verifica
   $('#safety-btn').onclick = () => {
     const panel = $('#safety-panel');
     panel.classList.toggle('hidden');
@@ -462,10 +466,10 @@ function hideUploadProgress() {
   if (el) el.classList.add('hidden');
 }
 
-// ── Camera dello scan QR — deve fermarsi su OGNI via d'uscita ────────────────
+// ── Camera dello scan QR, deve fermarsi su OGNI via d'uscita ────────────────
 // BUG TROVATO CON AUDIT: scanQR() ritorna una funzione stop(), ma se
 // l'utente lascia la schermata (bottone "Indietro" O swipe) prima di
-// completare la scansione, quella funzione non veniva mai chiamata — la
+// completare la scansione, quella funzione non veniva mai chiamata, la
 // camera restava accesa indefinitamente in background (batteria, privacy,
 // loop requestAnimationFrame orfano). Serve un riferimento richiamabile da
 // entrambe le vie d'uscita, non una variabile locale a una sola funzione.
@@ -476,7 +480,7 @@ function stopScanCamera() {
 }
 
 function renderScan() {
-  stopTitleEffect(); // usciamo da Home — stesso motivo di renderChat
+  stopTitleEffect(); // usciamo da Home, stesso motivo di renderChat
   root.innerHTML = `
     <div class="chat-header">
       <div style="width:40px"></div>
@@ -498,9 +502,9 @@ function renderScan() {
       <button class="pill pill-scan active">${t('navScan')}</button>
     </div>
   `;
-  // Pillola CHAT — stessa funzione del bottone "Indietro" di prima (deve
+  // Pillola CHAT, stessa funzione del bottone "Indietro" di prima (deve
   // fermare la camera prima di uscire, altrimenti resterebbe accesa in
-  // background — lo stesso bug corretto in precedenza su questa schermata)
+  // background, lo stesso bug corretto in precedenza su questa schermata)
   $('#nav-to-chat').onclick = () => { stopScanCamera(); screen = 'home'; render(); };
 
   scanQR($('#scan-video'), (data) => {
@@ -509,7 +513,7 @@ function renderScan() {
     .catch((e) => alert(t('cameraUnavailable', e.message)));
 
   // Alternativa al QR: incolla manualmente il codice ricevuto per un
-  // altro canale (chat, email) — stesso flusso di pairing, stessa
+  // altro canale (chat, email), stesso flusso di pairing, stessa
   // funzione pairWithScannedData già usata dalla scansione camera
   $('#paste-link').onclick = () => {
     $('#paste-panel').classList.toggle('hidden');
@@ -521,7 +525,7 @@ function renderScan() {
       $('#paste-input').value = text;
     } catch (e) {
       // Permesso negato o API non disponibile (comune su alcuni browser
-      // mobile) — l'incolla manuale nella textarea resta sempre disponibile,
+      // mobile), l'incolla manuale nella textarea resta sempre disponibile,
       // questo bottone è solo una comodità in più, non l'unico modo.
       alert(t('clipboardReadFailed'));
     }
@@ -529,7 +533,7 @@ function renderScan() {
   $('#paste-confirm').onclick = () => {
     const text = $('#paste-input').value.trim();
     if (!text) { alert(t('pasteCodeEmpty')); return; }
-    stopScanCamera(); // pairing riuscito via testo — la camera non serve più
+    stopScanCamera(); // pairing riuscito via testo, la camera non serve più
     pairWithScannedData(text).catch((e) => alert(t('qrInvalid', e.message)));
   };
 }
@@ -544,7 +548,7 @@ function fmt(ts) {
   return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-// ── Icone SVG a tratto singolo — usano currentColor, niente emoji a colori
+// ── Icone SVG a tratto singolo, usano currentColor, niente emoji a colori
 // che stonano con l'estetica monocromatica verde (📎🎙⏹ venivano rese a
 // colori dal sistema operativo su molti dispositivi).
 const ICON_ATTACH = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`;
@@ -553,10 +557,10 @@ const ICON_STOP = `<svg width="16" height="16" viewBox="0 0 24 24" fill="current
 const ICON_SEND = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 5 20 12 13 19"/></svg>`;
 const ICON_CLIPBOARD = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>`;
 
-// ── Effetto titolo "Arcanum" — gestito interamente da titleFx.js ─────────────
+// ── Effetto titolo "Arcanum", gestito interamente da titleFx.js ─────────────
 // (canvas: le lettere sono riempite di codice che scorre + ciclo di
 // decodifica). Qui teniamo solo il riferimento alla funzione di stop, da
-// richiamare prima di cambiare schermata — altrimenti l'animazione
+// richiamare prima di cambiare schermata, altrimenti l'animazione
 // resterebbe a girare a vuoto su un canvas che non esiste più nel DOM.
 let titleEffectStop = null;
 
@@ -567,7 +571,7 @@ function stopTitleEffect() {
 // ── Navigazione touch: swipe orizzontale tra le schermate ────────────────────
 // Home ⇄ Scan rispecchia le pill HOME/SCAN già esistenti (sono le stesse due
 // "schede" mostrate in basso). In Chat, lo swipe verso destra equivale al
-// tasto back — stesso gesto standard di "torna indietro" su mobile.
+// tasto back, stesso gesto standard di "torna indietro" su mobile.
 function handleSwipeLeft() {
   if (screen === 'home') { screen = 'scan'; render(); }
 }

@@ -1,9 +1,9 @@
 /**
- * js/media.js — Arcanum
+ * js/media.js: Arcanum
  * Invio/ricezione media (foto, audio) cifrati a chunk sul DataChannel.
  * Stesso schema collaudato nella versione nativa React Native (P2PManager.sendMedia).
  *
- * Limiti dimensione — più stretti che nativo perché il browser condivide
+ * Limiti dimensione, più stretti che nativo perché il browser condivide
  * lo stesso heap JS per tutto (IndexedDB + memoria applicativa):
  *   - foto:  nessun limite pratico (i telefoni comprimono già in JPEG/HEIC)
  *   - audio: nessun limite pratico (i vocali sono piccoli, tipicamente <2MB)
@@ -14,11 +14,11 @@ import { encryptMessage, decryptMessage } from './crypto.js';
 import { saveMedia, loadMedia } from './db.js';
 
 const CHUNK_SIZE = 12000; // byte per chunk, sotto il limite pratico DataChannel (~16KB)
-const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25MB — guard anti-OOM
+const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25MB, guard anti-OOM
 
 // In-flight reassembly state: mediaId → { chunks[], received, total, mimeType, mediaType, fromId, timer }
 const incoming = new Map();
-const INCOMING_TIMEOUT = 60000; // 60s — se un trasferimento resta incompleto, scarta
+const INCOMING_TIMEOUT = 60000; // 60s, se un trasferimento resta incompleto, scarta
 
 // ── Invio ──────────────────────────────────────────────────────────────────────
 // blob: File/Blob dal file input o da MediaRecorder
@@ -36,7 +36,7 @@ export async function sendMediaBlob(blob, mediaType, ratchetState, send, onProgr
   let state = ratchetState;
   for (let i = 0; i < totalChunks; i++) {
     const slice = bytes.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-    // Ogni chunk passa per il ratchet come fosse un messaggio a sé —
+    // Ogni chunk passa per il ratchet come fosse un messaggio a sé,
     // stessa forward secrecy dei messaggi di testo, chunk per chunk.
     const chunkB64 = btoa(String.fromCharCode(...slice));
     const { payload, newState } = encryptMessage(state, chunkB64);
@@ -49,7 +49,7 @@ export async function sendMediaBlob(blob, mediaType, ratchetState, send, onProgr
       payload, ts: Date.now(),
     }));
 
-    if (!sent) throw new Error('Peer non connesso — invio interrotto al chunk ' + i);
+    if (!sent) throw new Error('Peer non connesso, invio interrotto al chunk ' + i);
     onProgress?.(Math.round(((i + 1) / totalChunks) * 100));
 
     // Piccola pausa tra chunk per non saturare il buffer del DataChannel
@@ -62,7 +62,7 @@ export async function sendMediaBlob(blob, mediaType, ratchetState, send, onProgr
 // ── Ricezione ──────────────────────────────────────────────────────────────────
 // Chiamato da handleData quando arriva un chunk. Ritorna newState del ratchet
 // (va salvato dal chiamante), e se il trasferimento è completo ritorna anche
-// { done: true, mediaId, mediaType, mimeType } — altrimenti { done: false }.
+// { done: true, mediaId, mediaType, mimeType }, altrimenti { done: false }.
 export async function handleMediaChunk(msg, ratchetState, fromId) {
   const { mediaId, index, total, mediaType, mimeType } = msg;
 
@@ -77,7 +77,7 @@ export async function handleMediaChunk(msg, ratchetState, fromId) {
   const state0 = incoming.get(mediaId);
 
   // FIX: decryptMessage lancia un'eccezione su chiave errata/corruzione
-  // (non torna null) — la catturiamo qui esplicitamente per pulire subito
+  // (non torna null), la catturiamo qui esplicitamente per pulire subito
   // la entry incompleta invece di lasciarla nella Map fino al timeout di 60s
   let chunkB64, newState;
   try {

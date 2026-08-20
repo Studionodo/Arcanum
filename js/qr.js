@@ -1,5 +1,5 @@
 /**
- * js/qr.js — Arcanum
+ * js/qr.js: Arcanum
  * Generazione QR: qrcode-generator (leggerissima, no dipendenze)
  * Scansione QR: jsQR + getUserMedia
  */

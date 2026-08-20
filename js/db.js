@@ -1,5 +1,5 @@
 /**
- * js/db.js — Arcanum
+ * js/db.js: Arcanum
  * IndexedDB wrapper. Equivalente browser di Database.js (SQLite) nella versione RN.
  * Store: identity, contacts, messages, ratchet_state
  */
@@ -29,7 +29,7 @@ export function getDb() {
         db.createObjectStore('ratchet_state', { keyPath: 'contactId' });
       }
       if (!db.objectStoreNames.contains('media')) {
-        // Blob nativo — IndexedDB li gestisce senza serializzazione manuale
+        // Blob nativo, IndexedDB li gestisce senza serializzazione manuale
         db.createObjectStore('media', { keyPath: 'id' });
       }
     };
@@ -113,7 +113,7 @@ export async function deleteMessage(msgId) {
 
 // Riusa loadMessages() invece di aggiungere un indice composito
 // [contactId, created_at] al database (richiederebbe una migration di
-// schema) — a questa scala (chat personali, non migliaia di messaggi)
+// schema), a questa scala (chat personali, non migliaia di messaggi)
 // caricare tutta la cronologia e prendere l'ultimo elemento è la scelta
 // più semplice e sicura, non un problema di performance reale.
 export async function getLastMessage(contactId) {
@@ -141,7 +141,7 @@ export async function loadRatchetState(contactId) {
 }
 
 // ── Media (Blob) ───────────────────────────────────────────────────────────────
-// IndexedDB gestisce nativamente i Blob — nessuna conversione base64 necessaria,
+// IndexedDB gestisce nativamente i Blob, nessuna conversione base64 necessaria,
 // molto più efficiente in memoria rispetto a tenere il base64 in una stringa JS.
 export async function saveMedia(id, blob, mimeType) {
   const store = await tx('media', 'readwrite');

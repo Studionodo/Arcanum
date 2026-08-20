@@ -1,5 +1,5 @@
 /**
- * js/webrtc.js — Arcanum
+ * js/webrtc.js: Arcanum
  * Wrapper su RTCPeerConnection nativo del browser (no simple-peer, non serve in web).
  * Stessa interfaccia concettuale di TransportLayer.js WebRTCTransport.
  */
@@ -29,7 +29,7 @@ export class WebRTCTransport {
     this.onStatus?.(device.id, 'connecting');
 
     pc.onnegotiationneeded = async () => {
-      // AUDIT: nessuna gestione errori qui prima — se createOffer/
+      // AUDIT: nessuna gestione errori qui prima, se createOffer/
       // setLocalDescription falliva (stato di segnalazione inatteso,
       // rinegoziazione concorrente), diventava una promise rejection
       // silenziosa: la connessione restava bloccata senza che l'utente
@@ -44,7 +44,7 @@ export class WebRTCTransport {
     };
     pc.onicecandidate = (e) => {
       if (e.candidate === null) {
-        // ICE gathering completo — invia l'intero SDP (trickle:false equivalente)
+        // ICE gathering completo, invia l'intero SDP (trickle:false equivalente)
         this.onSignal?.(device.id, pc.localDescription);
       }
     };
@@ -70,7 +70,7 @@ export class WebRTCTransport {
       pc = entry.pc;
     }
 
-    // AUDIT: stesso problema di onnegotiationneeded — un SDP malformato o
+    // AUDIT: stesso problema di onnegotiationneeded, un SDP malformato o
     // uno stato di segnalazione inatteso (es. offer/answer fuori ordine)
     // lanciava un'eccezione mai catturata, lasciando il pairing bloccato
     // senza nessun segnale visibile per l'utente.

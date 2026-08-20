@@ -1,7 +1,7 @@
 /**
- * js/i18n.js — Arcanum
+ * js/i18n.js: Arcanum
  * Internazionalizzazione minimale: dizionario piatto IT/EN, nessuna dipendenza esterna.
- * La lingua scelta persiste in localStorage — è un flag di preferenza UI,
+ * La lingua scelta persiste in localStorage, è un flag di preferenza UI,
  * non dato sensibile, quindi localStorage (sincrono, semplice) va benissimo
  * a differenza dello stato crittografico che vive in IndexedDB.
  */
@@ -10,7 +10,7 @@ const STRINGS = {
   it: {
     appSub:            'Messaggi cifrati · P2P',
     myQr:              'IL MIO QR',
-    noContacts:        'Nessun contatto — scansiona un QR per iniziare',
+    noContacts:        'Nessun contatto: scansiona un QR per iniziare',
     statusConnected:   'connected',
     statusConnecting:  'connecting',
     statusDisconnected:'disconnesso',
@@ -31,7 +31,7 @@ const STRINGS = {
     cameraUnavailable: (msg) => `Camera non disponibile: ${msg}`,
     copyCode:          'Copia codice',
     codeCopied:        '✓ Copiato',
-    copyFailed:        'Copia non riuscita — prova a selezionare il testo manualmente',
+    copyFailed:        'Copia non riuscita, prova a selezionare il testo manualmente',
     pasteCode:         'Incolla codice invece',
     pasteCodeTitle:    'Incolla il codice ricevuto',
     pasteCodePlaceholder: 'Incolla qui il codice…',
@@ -40,17 +40,17 @@ const STRINGS = {
     safetyNumberTitle: 'Numero di sicurezza',
     safetyNumberHint:  'Confronta questo numero con il tuo contatto di persona o per telefono. Se coincide su entrambi i dispositivi, la connessione è sicura e nessuno si è inserito nello scambio.',
     safetyNumberClose: 'Chiudi',
-    noMessagesYet:     'Nessun messaggio — scrivi qualcosa per iniziare',
+    noMessagesYet:     'Nessun messaggio: scrivi qualcosa per iniziare',
     mediaPhotoPreview: '📷 Foto',
     mediaAudioPreview: '🎙 Audio',
     pasteFromClipboard: 'Leggi dagli appunti',
     clipboardEmpty:    'Gli appunti sono vuoti.',
-    clipboardReadFailed: 'Lettura appunti non riuscita — incolla manualmente nel campo qui sotto.',
+    clipboardReadFailed: 'Lettura appunti non riuscita, incolla manualmente nel campo qui sotto.',
   },
   en: {
     appSub:            'Encrypted messages · P2P',
     myQr:              'MY QR',
-    noContacts:        'No contacts yet — scan a QR to get started',
+    noContacts:        'No contacts yet, scan a QR to get started',
     statusConnected:   'connected',
     statusConnecting:  'connecting',
     statusDisconnected:'disconnected',
@@ -71,7 +71,7 @@ const STRINGS = {
     cameraUnavailable: (msg) => `Camera unavailable: ${msg}`,
     copyCode:          'Copy code',
     codeCopied:        '✓ Copied',
-    copyFailed:        'Copy failed — try selecting the text manually',
+    copyFailed:        'Copy failed, try selecting the text manually',
     pasteCode:         'Paste code instead',
     pasteCodeTitle:    'Paste the received code',
     pasteCodePlaceholder: 'Paste the code here…',
@@ -80,12 +80,12 @@ const STRINGS = {
     safetyNumberTitle: 'Safety number',
     safetyNumberHint:  'Compare this number with your contact in person or by phone. If it matches on both devices, the connection is secure and no one has intercepted the exchange.',
     safetyNumberClose: 'Close',
-    noMessagesYet:     'No messages yet — say something to get started',
+    noMessagesYet:     'No messages yet, say something to get started',
     mediaPhotoPreview: '📷 Photo',
     mediaAudioPreview: '🎙 Audio',
     pasteFromClipboard: 'Read from clipboard',
     clipboardEmpty:    'Clipboard is empty.',
-    clipboardReadFailed: 'Clipboard read failed — paste manually in the field below.',
+    clipboardReadFailed: 'Clipboard read failed, paste manually in the field below.',
   },
 };
 

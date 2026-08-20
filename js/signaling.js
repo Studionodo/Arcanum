@@ -1,6 +1,6 @@
 /**
- * js/signaling.js — Arcanum
- * Porta web di SignalingService.js — stesso protocollo, stesso relay Fly.io.
+ * js/signaling.js: Arcanum
+ * Porta web di SignalingService.js, stesso protocollo, stesso relay Fly.io.
  * IMPORTANTE: aggiorna RELAY_URL con il tuo endpoint reale dopo il deploy.
  */
 
@@ -15,7 +15,7 @@ class SignalingService {
     this.connected = false;
     this._reconnectTimer = null;
     this._reconnectAttempts = 0; // AUDIT: prima riprovava ogni 3s per sempre,
-    // senza backoff né limite — nessuna chiamata a disconnect() esiste da
+    // senza backoff né limite, nessuna chiamata a disconnect() esiste da
     // nessuna parte nell'app, quindi il loop non si fermava mai finché il
     // tab restava aperto. Con il relay non ancora deployato, ogni utente
     // che apre l'app oggi genera un tentativo fallito ogni 3s all'infinito.
@@ -39,7 +39,7 @@ class SignalingService {
 
       this.ws.onopen = () => {
         this.connected = true;
-        this._reconnectAttempts = 0; // connessione riuscita — azzera il backoff
+        this._reconnectAttempts = 0; // connessione riuscita, azzera il backoff
         this._send({ type: 'register', deviceId: this.deviceId });
         this.onConnected?.();
         onReady?.();

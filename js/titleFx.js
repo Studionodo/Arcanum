@@ -1,12 +1,12 @@
 /**
- * js/titleFx.js — Arcanum
+ * js/titleFx.js: Arcanum
  *
- * Effetto titolo — due cose insieme, non una al posto dell'altra:
+ * Effetto titolo, due cose insieme, non una al posto dell'altra:
  * 1) Le lettere sono SEMPRE riempite da righe di codice Matrix che
  *    scorrono al loro interno (canvas + destination-in sulla sagoma).
  * 2) Il ciclo di decodifica esistente resta: periodicamente il testo si
  *    "scrambla" in caratteri casuali e si rivela di nuovo da sinistra a
- *    destra — ma anche durante quel ciclo, ogni carattere (vero o ancora
+ *    destra, ma anche durante quel ciclo, ogni carattere (vero o ancora
  *    scramblato) è comunque riempito dallo stesso codice che scorre.
  */
 
@@ -19,7 +19,7 @@ export function startTitleEffect(canvasId, realText) {
   if (!canvas) return () => {};
   const ctx = canvas.getContext('2d');
 
-  // Font monospace per entrambi (sagoma del testo e codice che scorre) —
+  // Font monospace per entrambi (sagoma del testo e codice che scorre),
   // così la larghezza dei caratteri non cambia durante il ciclo di
   // decodifica (un font proporzionale farebbe "saltare" il canvas ad ogni
   // carattere sostituito, monospace evita il problema).
@@ -36,7 +36,7 @@ export function startTitleEffect(canvasId, realText) {
   const CELL_H = 10;
   let scrollOffset = 0;
 
-  // ── Stato del ciclo di decodifica — determina la sagoma corrente ────────────
+  // ── Stato del ciclo di decodifica, determina la sagoma corrente ────────────
   let maskText = realText.split('').map(() => randomChar()).join('');
   let lockedUpTo = -1;
   let decodeInterval = null;
@@ -69,7 +69,7 @@ export function startTitleEffect(canvasId, realText) {
     ctx.globalCompositeOperation = 'source-over';
     ctx.font = CODE_FONT;
     ctx.fillStyle = 'rgba(0,255,65,0.95)';
-    // Griglia densa che copre l'intera area — non un carattere sparso per
+    // Griglia densa che copre l'intera area, non un carattere sparso per
     // colonna (quello produceva una "pioggia" troppo rada, illeggibile
     // dentro sagome piccole come le lettere di un titolo). Scorre
     // verticalmente nel tempo per restare "viva".

@@ -1,18 +1,18 @@
 /**
- * js/rain.js — Arcanum
+ * js/rain.js: Arcanum
  * Pioggia di caratteri stile Matrix sullo sfondo. Vive su un canvas separato
- * da #app (vedi index.html) — così sopravvive ai re-render innerHTML delle
+ * da #app (vedi index.html), così sopravvive ai re-render innerHTML delle
  * schermate invece di riavviarsi ad ogni cambio view.
  *
- * v1.2.2 — riscritto su richiesta esplicita:
+ * v1.2.2, riscritto su richiesta esplicita:
  * - PRIMA: formula zonale rendeva il centro schermo quasi invisibile
- *   (opacità ~0.02 dal 30% al 70% della larghezza) — ora uniforme su
+ *   (opacità ~0.02 dal 30% al 70% della larghezza), ora uniforme su
  *   tutta la larghezza. Le card/pannelli restano sopra grazie ai loro
  *   sfondi opachi esistenti (z-index invariato, nessuna modifica lì).
  * - PRIMA: ogni colonna riavviava quasi subito al fondo (2.5%/frame,
- *   nessuna vera pausa) — sembrava una tenda uniforme sincronizzata.
+ *   nessuna vera pausa), sembrava una tenda uniforme sincronizzata.
  *   ORA: ogni colonna ha uno stato di pausa reale (0.5-3.5s, indipendente
- *   dalle altre) — pioggia intermittente e organica, non tutta insieme.
+ *   dalle altre), pioggia intermittente e organica, non tutta insieme.
  */
 
 export const CHARS = 'アイウエオカキクケコサシスセソタチナニヌネノハヒフヘホ0123456789ABCDEF│╣║╗╝┼╚╔╩╦╠═╬';
@@ -32,7 +32,7 @@ export function startRain() {
   const COL_WIDTH = 16;
   function colCount() { return Math.floor(canvas.width / COL_WIDTH); }
 
-  // Ogni colonna: { y, restUntil } — restUntil=0 significa "sta cadendo",
+  // Ogni colonna: { y, restUntil }, restUntil=0 significa "sta cadendo",
   // un timestamp futuro significa "in pausa fino a quel momento".
   // Alcune colonne partono già in pausa (stagger iniziale), così non
   // iniziano tutte a cadere nello stesso istante al boot.
@@ -59,7 +59,7 @@ export function startRain() {
     for (let i = 0; i < n; i++) {
       const d = drops[i];
 
-      // Colonna in pausa — non disegna nulla finché non scade il timer
+      // Colonna in pausa, non disegna nulla finché non scade il timer
       if (d.restUntil) {
         if (now < d.restUntil) continue;
         d.restUntil = 0;
