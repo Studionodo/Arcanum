@@ -2,7 +2,7 @@
   "name": "Arcanum",
   "short_name": "Arcanum",
   "description": "Messaggistica P2P cifrata — nessun server legge i tuoi messaggi",
-  "version": "1.13.0",
+  "version": "1.15.0",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

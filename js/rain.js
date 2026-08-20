@@ -66,7 +66,7 @@ export function startRain() {
         d.y = Math.random() * -40; // pausa finita, riparte dall'alto
       }
 
-      if (d.y < 0) { d.y += 0.4 + Math.random() * 0.3; continue; }
+      if (d.y < 0) { d.y += 0.28 + Math.random() * 0.2; continue; }
 
       const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
       const x = i * COL_WIDTH + 2;
@@ -88,7 +88,7 @@ export function startRain() {
       ctx.fillText(ch, x, yPx);
       ctx.shadowBlur = 0;
 
-      d.y += 0.55 + (i % 5) * 0.06;
+      d.y += 0.37 + (i % 5) * 0.04;
 
       if (yPx > canvas.height) {
         // Al fondo: 40% riparte subito (raffica breve), 60% va in pausa reale
