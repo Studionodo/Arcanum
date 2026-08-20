@@ -586,5 +586,22 @@ startRain();
 attachSwipeNav(root, { onSwipeLeft: handleSwipeLeft, onSwipeRight: handleSwipeRight });
 
 if ('serviceWorker' in navigator) {
+  // Se un service worker aveva già il controllo della pagina PRIMA di questa
+  // registrazione, un cambio di controller successivo significa un vero
+  // aggiornamento (non la prima installazione) — solo in quel caso ha senso
+  // avvisare l'utente. Altrimenti "controllerchange" scatta anche al primo
+  // utilizzo assoluto, dove non c'è nessun aggiornamento da segnalare.
+  const hadController = !!navigator.serviceWorker.controller;
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+
+  let notified = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || notified) return;
+    notified = true;
+    const banner = document.createElement('div');
+    banner.className = 'update-banner';
+    banner.innerHTML = `<span>${t('updateAvailable')}</span><button id="update-reload-btn">${t('updateReload')}</button>`;
+    document.body.appendChild(banner);
+    document.getElementById('update-reload-btn').onclick = () => window.location.reload();
+  });
 }

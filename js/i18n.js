@@ -46,6 +46,8 @@ const STRINGS = {
     pasteFromClipboard: 'Leggi dagli appunti',
     clipboardEmpty:    'Gli appunti sono vuoti.',
     clipboardReadFailed: 'Lettura appunti non riuscita, incolla manualmente nel campo qui sotto.',
+    updateAvailable:   'Nuova versione disponibile',
+    updateReload:      'Aggiorna',
   },
   en: {
     appSub:            'Encrypted messages · P2P',
@@ -86,6 +88,8 @@ const STRINGS = {
     pasteFromClipboard: 'Read from clipboard',
     clipboardEmpty:    'Clipboard is empty.',
     clipboardReadFailed: 'Clipboard read failed, paste manually in the field below.',
+    updateAvailable:   'New version available',
+    updateReload:      'Update',
   },
 };
 

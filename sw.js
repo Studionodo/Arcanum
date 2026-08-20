@@ -1,7 +1,7 @@
 // sw.js — Arcanum service worker
 // Cache-first per gli asset statici, network-only per WebSocket (non applicabile ai SW comunque)
 
-const CACHE_NAME = 'arcanum-v1.17.0';
+const CACHE_NAME = 'arcanum-v1.18.0';
 const ASSETS = [
   '/',
   '/index.html',
